@@ -43,6 +43,8 @@
     int mostrarMenu(int cantidadCliente,int cantidadContratos); //Prototipo para el menu y la election
     int capturarCliente(int , Cliente*); //Prototipo para capturar nuevo cliente
     int capturarContratos(int ,Contrato*); //Prototipo para capturar Contratos
+    int mostrarClientes(int, Cliente*);
+    int mostrarContratos(int , Contrato*);
     long mostrarHijos(int,Cliente*);
 
 int main() {
@@ -64,7 +66,9 @@ int main() {
             listadoContratos = (Contrato *) malloc(sizeof(Contrato)*cantidadContratos);
             capturarContratos(cantidadContratos-1,listadoContratos);
         } else if(eleccion == 3){
-           // mostrarClientes(cantidadClientes,listadoClientes);
+           mostrarClientes(cantidadClientes,listadoClientes);
+        } else if(eleccion ==4){
+            mostrarContratos(cantidadContratos,listadoContratos);
         } else if(eleccion ==5){
            long hijos = mostrarHijos(cantidadClientes,listadoClientes);
             printf("Hijos: %ld",hijos);
@@ -168,6 +172,35 @@ int capturarContratos(int indice ,Contrato* listadoContratos){
 
     printf("Pago mensual: ");
     scanf("%f",&((listadoContratos+indice)->pago));
+
+}
+
+
+int mostrarClientes(int cant,Cliente* listadoClientes){
+    for (int i = 0; i < cant; i++) {
+        printf("Cliente :%d\n",i+1);
+        printf("Identificacion:%s\n",((listadoClientes+i)->identificacion));
+        printf("No Casa:%s\n",((listadoClientes+i)->Dir.NoCasa));
+        printf("Ciudad:%s\n",((listadoClientes+i)->Dir.ciudad));
+        printf("Sector:%s\n",((listadoClientes+i)->Dir.sector));
+        printf("Calle:%s\n",((listadoClientes+i)->Dir.calle));
+        printf("Telefono:%s\n",((listadoClientes+i)->telefono));
+        printf("Profesion:%s\n",((listadoClientes+i)->profesion));
+        printf("Nombre:%s\n",((listadoClientes+i)->nombre));
+
+
+    }
+}
+int mostrarContratos(int cantidad, Contrato* listadoContrato){
+    for (int i = 0; i < cantidad; i++) {
+        printf("Contrato:%d",i+1);
+        printf("Numero:%d\n",((listadoContrato+i)->numero));
+        printf("Fecha:%d/%d/%d\n",((listadoContrato+i)->fecha.dia),((listadoContrato+i)->fecha.mes),((listadoContrato+i)->fecha.anyo));
+        printf("Identificacion:%s\n",((listadoContrato+i)->identificacion));
+        printf("Pago:%.2f\n",((listadoContrato+i)->pago));
+        printf("Inscripcion:%.2f\n\n",((listadoContrato+i)->inscripcion));
+
+    }
 
 }
 
