@@ -45,12 +45,15 @@ int registrarCarros(int,Carro * );
 int registrarPasajeros(int ,Pasajeros *);
 int registrarTransaccion(int ,Transaccion *);
 int cantidadDuracionMinutos(int,int,int,int,int,int);
+//void mostrarPasajeroConcho(Pasajeros *, int,int,Transaccion *,int);
+void mostrarConcho(int,Carro *);
 
 int main() {
     int eleccion;
     int cantidadCarros = 0;
     int cantidadPasajeros= 0;
     int cantidadTransaccion =0;
+    int identificacion;
     Carro * listaCarros = (Carro *)malloc(sizeof(Carro)*cantidadCarros);
     Pasajeros * listaPasajeros=(Pasajeros*) malloc(sizeof(Pasajeros)*cantidadPasajeros);
     Transaccion * listaTransaccion=(Transaccion *) malloc(sizeof(Transaccion)*cantidadTransaccion);
@@ -73,6 +76,22 @@ int main() {
                 listaTransaccion = (Transaccion*) realloc(listaTransaccion,sizeof (Transaccion)*cantidadTransaccion);
                 registrarTransaccion(cantidadTransaccion-1,listaTransaccion);
                 break;
+            case 4:
+
+                mostrarConcho(cantidadCarros,listaCarros); //Para poder mostrar el usuario los conchos y que pueda elegir que concho quiere
+                printf("\n\t--Ingrese la identificacion del concho para ver cuales fueron sus pasajeros:--");
+                scanf("%d" ,&identificacion);
+                printf("El concho elegido es el No %d",identificacion);
+                //mostrarPasajeroConcho( listaPasajeros ,cantidadTransaccion,identificacion,listaTransaccion,cantidadPasajeros);
+                break;
+            case 5:
+
+                break;
+            case 6:
+
+                break;
+            default:
+                printf("Eleccion no reconocido");
 
 
 
@@ -163,30 +182,30 @@ int cantidadDuracionMinutos(int hora1,int minutos1,int segundo1,int hora2,int mi
     return diferencias;
 }
 int registrarTransaccion(int indice,Transaccion * listaTransaccion) {
-    //printf("---Registro de la transaccion---\n");
+    printf("---Registro de la transaccion---\n");
     fflush(stdin);
-    //printf("Ingrese el Id del carro:");
-    //gets((listaTransaccion + indice)->idCarro);
+    printf("Ingrese el Id del carro:");
+    gets((listaTransaccion + indice)->idCarro);
 
-    //printf("Ingrese el Id del pasajero:");
-    //gets((listaTransaccion + indice)->idPasajero);
+    printf("Ingrese el Id del pasajero:");
+    gets((listaTransaccion + indice)->idPasajero);
 
-    //printf("Ingrese el monto pagado:");
-    //scanf("%d", &(listaTransaccion + indice)->monto);
+    printf("Ingrese el monto pagado:");
+    scanf("%d", &(listaTransaccion + indice)->monto);
 
-    //printf("Ingrese la devuelta:");
-    //scanf("%f", &(listaTransaccion + indice)->devuelta);
+    printf("Ingrese la devuelta:");
+    scanf("%f", &(listaTransaccion + indice)->devuelta);
 
-    //printf("\n---Ingrese los datos relativos a la fecha---\n");
+    printf("\n---Ingrese los datos relativos a la fecha---\n");
 
-    //printf("Ingrese el dia:");
-    //scanf("%d",&(listaTransaccion+indice)->fecha.dia);
+    printf("Ingrese el dia:");
+    scanf("%d",&(listaTransaccion+indice)->fecha.dia);
 
-    //printf("Ingrese el mes:");
-    //scanf("%d",&(listaTransaccion+indice)->fecha.mes);
+    printf("Ingrese el mes:");
+    scanf("%d",&(listaTransaccion+indice)->fecha.mes);
 
-    //printf("Ingrese el a%co:",164);
-    //scanf("%s",(listaTransaccion+indice)->fecha.anyo);
+    printf("Ingrese el a%co:",164);
+    scanf("%s",(listaTransaccion+indice)->fecha.anyo);
 
     printf("----NB: Ingrese la hora en formato (H24)--\n");
     printf("Ingrese el tiempo de subida(HH:MM:SS):");
@@ -208,3 +227,32 @@ int registrarTransaccion(int indice,Transaccion * listaTransaccion) {
     //strcpy((listaTransaccion+indice)->fecha.duracion,dur);
 
 }
+void mostrarConcho(int cantidad, Carro * listaCarros){
+    if(cantidad == 0){
+        printf("Aun no hay conchos registrados.");
+        return;
+    }
+    printf("\nNumero Concho\t \tIdentificacion\t \tProprietario\n");
+    for(int i =0; i < cantidad; i++){
+        printf("\tConcho(%d)\t",i+1);
+        printf(" %s\t",(*(listaCarros+i)).fichaId);
+        printf("    \t\t%s\n",(*(listaCarros+i)).proprietario);
+    }
+}
+//void mostrarPasajeroConcho(Pasajeros * listaPasajeros,int cantidadTransaccion,int choice,Transaccion * listaTransaccion,int cantidadPasajeros){
+  //  for (int i = 0; i < cantidadTransaccion; i++) {
+    //    if(choice == (*(listaTransaccion+i)).idCarro)
+  //  }
+
+
+
+
+//    for (int i = 0; i < cantidadPasajeros; ++i) {
+//        if(choice == (listaPasajeros+i).);
+//        printf("%s",(listaPasajeros+i)->ID);
+//        printf("%s",(listaPasajeros+i)->lugarTrabajo);
+//        printf("%s",(listaPasajeros+i)->telefono);
+//
+//    }
+//
+//}
