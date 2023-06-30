@@ -41,12 +41,12 @@ typedef struct {
 }Transaccion;
 
 int mostrarMenu();
-int registrarCarros(int,Carro * );
-int registrarPasajeros(int ,Pasajeros *);
-int registrarTransaccion(int ,Transaccion *);
+int registrarCarros(int,Carro *, FILE * );
+int registrarPasajeros(int ,Pasajeros *,FILE *);
+int registrarTransaccion(int ,Transaccion *,FILE *);
 int cantidadDuracionMinutos(int,int,int,int,int,int);
 //void mostrarPasajeroConcho(Pasajeros *, int,int,Transaccion *,int);
-void mostrarConcho(int,Carro *);
+void mostrarConcho(FILE *);
 
 int main() {
     int eleccion;
@@ -54,6 +54,9 @@ int main() {
     int cantidadPasajeros= 0;
     int cantidadTransaccion =0;
     int identificacion;
+    FILE * archivoCarros = fopen("pasajeros.dat","a+b");
+    FILE * archivoPasajeros= fopen("pasajeros.dat","a+b");
+    FILE * archivoTransaccion= fopen("transaccion.dat","a+b");
     Carro * listaCarros = (Carro *)malloc(sizeof(Carro)*cantidadCarros);
     Pasajeros * listaPasajeros=(Pasajeros*) malloc(sizeof(Pasajeros)*cantidadPasajeros);
     Transaccion * listaTransaccion=(Transaccion *) malloc(sizeof(Transaccion)*cantidadTransaccion);
@@ -64,21 +67,21 @@ int main() {
             case 1:
                 cantidadCarros++;
                 listaCarros = (Carro*) realloc(listaCarros,sizeof(Carro)*cantidadCarros);
-                registrarCarros(cantidadCarros-1,listaCarros);
+                registrarCarros(cantidadCarros-1,listaCarros,archivoCarros);
                 break;
             case 2:
                 cantidadPasajeros++;
                 listaPasajeros =(Pasajeros*) realloc(listaPasajeros,sizeof(Pasajeros)*cantidadPasajeros);
-                registrarPasajeros(cantidadPasajeros-1,listaPasajeros);
+                registrarPasajeros(cantidadPasajeros-1,listaPasajeros,archivoPasajeros);
                 break;
             case 3:
                 cantidadTransaccion++;
                 listaTransaccion = (Transaccion*) realloc(listaTransaccion,sizeof (Transaccion)*cantidadTransaccion);
-                registrarTransaccion(cantidadTransaccion-1,listaTransaccion);
+                registrarTransaccion(cantidadTransaccion-1,listaTransaccion,archivoTransaccion);
                 break;
             case 4:
 
-                mostrarConcho(cantidadCarros,listaCarros); //Para poder mostrar el usuario los conchos y que pueda elegir que concho quiere
+                mostrarConcho(archivoCarros); //Para poder mostrar el usuario los conchos y que pueda elegir que concho quiere
                 printf("\n\t--Ingrese la identificacion del concho para ver cuales fueron sus pasajeros:--");
                 scanf("%d" ,&identificacion);
                 printf("El concho elegido es el No %d",identificacion);
@@ -137,7 +140,7 @@ int mostrarMenu(){
             return 0;
     }
 }
-int registrarCarros(int indice, Carro * listadoCarros){
+int registrarCarros(int indice, Carro * listadoCarros,FILE * archivoCarros){
     printf("---Registracion de carros---\n");
     fflush(stdin);
 
@@ -153,8 +156,10 @@ int registrarCarros(int indice, Carro * listadoCarros){
     printf("Nombre del proprietario:");
     gets((listadoCarros+indice)->proprietario);
 
+    fwrite(listadoCarros,sizeof (Carro),1,archivoCarros);
+
 }
-int registrarPasajeros(int indice, Pasajeros * listaPasajeros){
+int registrarPasajeros(int indice, Pasajeros * listaPasajeros,FILE * archivoPasajeros){
     printf("\n---Registracion de pasajeros---\n");
 
     printf("Ingrese su nombre:");
@@ -173,6 +178,8 @@ int registrarPasajeros(int indice, Pasajeros * listaPasajeros){
     printf("Compania de movil:");
     gets((listaPasajeros+indice)->compMovil);
 
+    fwrite(listaPasajeros,sizeof (Pasajeros),1,archivoPasajeros);
+
 }
 int cantidadDuracionMinutos(int hora1,int minutos1,int segundo1,int hora2,int minutos2,int segundo2){
     int segundos1 = hora1 * 3600 + minutos1 * 60 + segundo1;
@@ -181,7 +188,7 @@ int cantidadDuracionMinutos(int hora1,int minutos1,int segundo1,int hora2,int mi
 
     return diferencias;
 }
-int registrarTransaccion(int indice,Transaccion * listaTransaccion) {
+int registrarTransaccion(int indice,Transaccion * listaTransaccion,FILE * archivoTransaccion) {
     printf("---Registro de la transaccion---\n");
     fflush(stdin);
     printf("Ingrese el Id del carro:");
@@ -226,19 +233,39 @@ int registrarTransaccion(int indice,Transaccion * listaTransaccion) {
     //printf("El tiempo es %d",(*(listaTransaccion+indice)).fecha.duracion);
     //strcpy((listaTransaccion+indice)->fecha.duracion,dur);
 
+    fwrite(listaTransaccion,sizeof(Transaccion),1,archivoTransaccion);
+
 }
-void mostrarConcho(int cantidad, Carro * listaCarros){
-    if(cantidad == 0){
-        printf("Aun no hay conchos registrados.");
-        return;
+void mostrarConcho(FILE * archivoConcho){
+    Carro  carroActual;
+
+    fseek(archivoConcho,0,SEEK_END);
+    int tamano = ftell(archivoConcho);
+    fseek(archivoConcho,0,SEEK_SET);
+
+    printf("\tIdentificacion\t \tProprietario\n");
+    while (ftell(archivoConcho) < tamano){
+        fread(&carroActual,sizeof (Carro),1,archivoConcho);
+
+        printf("      %s\t",carroActual.fichaId);
+        printf("    \t\t%s\n\n\n\n\n",carroActual.proprietario);
     }
-    printf("\nNumero Concho\t \tIdentificacion\t \tProprietario\n");
-    for(int i =0; i < cantidad; i++){
-        printf("\tConcho(%d)\t",i+1);
-        printf(" %s\t",(*(listaCarros+i)).fichaId);
-        printf("    \t\t%s\n",(*(listaCarros+i)).proprietario);
-    }
+
+
+
+
 }
+
+//void imprimirTodosLosPasajeros(FILE * archivoPasajeros) {
+//    printf("Automóviles de la marca %s y año %d:\n", marca, anio);
+//    for (int i = 0; i < numAutomoviles; i++) {
+//        if (strcmp(automoviles[i].marca, marca) == 0 && automoviles[i].anio == anio) {
+//            printf("Modelo: %s\n", automoviles[i].modelo);
+//            printf("Precio por día: %.2f\n", automoviles[i].precioPorDia);
+//            printf("\n");
+//        }
+//    }
+//}
 //void mostrarPasajeroConcho(Pasajeros * listaPasajeros,int cantidadTransaccion,int choice,Transaccion * listaTransaccion,int cantidadPasajeros){
   //  for (int i = 0; i < cantidadTransaccion; i++) {
     //    if(choice == (*(listaTransaccion+i)).idCarro)
