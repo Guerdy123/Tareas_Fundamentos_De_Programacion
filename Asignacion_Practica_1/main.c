@@ -45,6 +45,7 @@ int registrarCarros(int,Carro *, FILE * );
 int registrarPasajeros(int ,Pasajeros *,FILE *);
 int registrarTransaccion(int ,Transaccion *,FILE *);
 int cantidadDuracionMinutos(int,int,int,int,int,int);
+void imprimirTodosLosPasajeros(FILE *);
 //void mostrarPasajeroConcho(Pasajeros *, int,int,Transaccion *,int);
 void mostrarConcho(FILE *);
 
@@ -88,7 +89,7 @@ int main() {
                 //mostrarPasajeroConcho( listaPasajeros ,cantidadTransaccion,identificacion,listaTransaccion,cantidadPasajeros);
                 break;
             case 5:
-
+                imprimirTodosLosPasajeros(archivoPasajeros);
                 break;
             case 6:
 
@@ -256,7 +257,24 @@ void mostrarConcho(FILE * archivoConcho){
 
 }
 
-//void imprimirTodosLosPasajeros(FILE * archivoPasajeros) {
+void imprimirTodosLosPasajeros(FILE * archivoPasajeros) {
+
+    Pasajeros pasajeroActual;
+
+    fseek(archivoPasajeros, 0, SEEK_END);
+    int tamano = ftell(archivoPasajeros);
+    fseek(archivoPasajeros, 0, SEEK_SET);
+
+    printf("\tNombre\t \t\n");
+    while (ftell(archivoPasajeros) < tamano) {
+        fread(&pasajeroActual, sizeof(Pasajeros), 1, archivoPasajeros);
+
+        printf("      %s\t", pasajeroActual.nombre);
+
+    }
+}
+
+
 //    printf("Automóviles de la marca %s y año %d:\n", marca, anio);
 //    for (int i = 0; i < numAutomoviles; i++) {
 //        if (strcmp(automoviles[i].marca, marca) == 0 && automoviles[i].anio == anio) {
@@ -266,20 +284,4 @@ void mostrarConcho(FILE * archivoConcho){
 //        }
 //    }
 //}
-//void mostrarPasajeroConcho(Pasajeros * listaPasajeros,int cantidadTransaccion,int choice,Transaccion * listaTransaccion,int cantidadPasajeros){
-  //  for (int i = 0; i < cantidadTransaccion; i++) {
-    //    if(choice == (*(listaTransaccion+i)).idCarro)
-  //  }
 
-
-
-
-//    for (int i = 0; i < cantidadPasajeros; ++i) {
-//        if(choice == (listaPasajeros+i).);
-//        printf("%s",(listaPasajeros+i)->ID);
-//        printf("%s",(listaPasajeros+i)->lugarTrabajo);
-//        printf("%s",(listaPasajeros+i)->telefono);
-//
-//    }
-//
-//}
