@@ -36,6 +36,7 @@ typedef struct {
     Fecha fecha;
     int monto;
     float devuelta;
+    Pasajeros pasajeros;
 }Transaccion;
 
 int mostrarMenu();
@@ -45,7 +46,7 @@ int registrarTransaccion(int ,Transaccion *,FILE *);
 int cantidadDuracionMinutos(int,int,int,int,int,int);
 void imprimirTodosLosPasajeros(FILE *);
 void mostrarConcho(FILE *);
-void mostrarPasajeroConcho(FILE *, char *);
+void mostrarPasajeroConcho(FILE *,FILE *,char *);
 
 int main() {
     int eleccion;
@@ -53,7 +54,7 @@ int main() {
     int cantidadPasajeros= 0;
     int cantidadTransaccion =0;
     char identificacion[4];
-    FILE * archivoCarros = fopen("pasajeros.dat","a+b");
+    FILE * archivoCarros = fopen("carros.dat","a+b");
     FILE * archivoPasajeros= fopen("pasajeros.dat","a+b");
     FILE * archivoTransaccion= fopen("transaccion.dat","a+b");
     Carro * listaCarros = (Carro *)malloc(sizeof(Carro)*cantidadCarros);
@@ -85,7 +86,7 @@ int main() {
                 mostrarConcho(archivoCarros);
                 printf("\n\t--Elije la identificacion de un  concho para ver cuales fueron sus pasajeros:--");
                 scanf("%s" ,identificacion);
-                mostrarPasajeroConcho(archivoTransaccion,  identificacion);
+                mostrarPasajeroConcho(archivoTransaccion, archivoPasajeros, identificacion);
                 break;
             case 5:
                 imprimirTodosLosPasajeros(archivoPasajeros);
@@ -245,7 +246,7 @@ void mostrarConcho(FILE * archivoConcho){
     printf("\tIdentificacion\t \tProprietario\n");
     while (ftell(archivoConcho) < tamano) {
         fread(&carroActual, sizeof(Carro), 1, archivoConcho);
-            printf("      %s\t",carroActual.fichaId);
+            printf("Concho %s\t",carroActual.fichaId);
             printf("    \t\t%s\n",carroActual.proprietario);
     }
 
@@ -268,21 +269,38 @@ void imprimirTodosLosPasajeros(FILE * archivoPasajeros) {
 
     }
 }
-void mostrarPasajeroConcho(FILE * archivoTransaccion, char * num){
-    Transaccion  transaccionActual;
+void mostrarPasajeroConcho(FILE * archivoTransaccion, FILE * archivoPasajeros, char * num) {
+    Transaccion transaccionActual;
+    Pasajeros pasajeroActual;
+    int encontrado = 0;
 
-    fseek(archivoTransaccion,0,SEEK_END);
-    int tamano = ftell(archivoTransaccion);
-    fseek(archivoTransaccion,0,SEEK_SET);
+    fseek(archivoTransaccion, 0, SEEK_END);
+    int tamanoTransacciones = ftell(archivoTransaccion);
+    fseek(archivoTransaccion, 0, SEEK_SET);
 
-    printf("----Pasajeros Concho %s----",num);
-    while (ftell(archivoTransaccion) < tamano){
+    fseek(archivoPasajeros, 0, SEEK_END);
+    int tamanoPasajeros = ftell(archivoPasajeros);
+    fseek(archivoPasajeros, 0, SEEK_SET);
 
-        fread(&transaccionActual,sizeof (Transaccion),1,archivoTransaccion);
+    printf("----Pasajeros Concho %s----\n", num);
+    while (ftell(archivoTransaccion) < tamanoTransacciones) {
+        fread(&transaccionActual, sizeof(Transaccion), 1, archivoTransaccion);
 
-        if(strcmp(transaccionActual.idCarro, num) == 0){
-            printf("Pen pen");
+        if (strcmp(transaccionActual.idCarro, num) == 0) {
+            encontrado = 1;
+            fseek(archivoPasajeros, 0, SEEK_SET);
+            while (ftell(archivoPasajeros) < tamanoPasajeros) {
+                fread(&pasajeroActual, sizeof(Pasajeros), 1, archivoPasajeros);
+                if (strcmp(pasajeroActual.ID, transaccionActual.idPasajero) == 0) {
+                    printf("Nombre: %s\n", pasajeroActual.nombre);
+                    printf("Teléfono: %s\n", pasajeroActual.telefono);
+                    printf("\n");
+                }
+            }
         }
+    }
+    if (!encontrado) {
+        printf("El carro no ha sido encontrado en los archivos\n");
     }
 }
 
