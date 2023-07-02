@@ -273,6 +273,7 @@ void mostrarPasajeroConcho(FILE * archivoTransaccion, FILE * archivoPasajeros, c
     Transaccion transaccionActual;
     Pasajeros pasajeroActual;
     int encontrado = 0;
+    int mas;
 
     fseek(archivoTransaccion, 0, SEEK_END);
     int tamanoTransacciones = ftell(archivoTransaccion);
@@ -282,7 +283,7 @@ void mostrarPasajeroConcho(FILE * archivoTransaccion, FILE * archivoPasajeros, c
     int tamanoPasajeros = ftell(archivoPasajeros);
     fseek(archivoPasajeros, 0, SEEK_SET);
 
-    printf("----Pasajeros Concho %s----\n", num);
+    printf("\n----Pasajeros Concho %s----\n", num);
     while (ftell(archivoTransaccion) < tamanoTransacciones) {
         fread(&transaccionActual, sizeof(Transaccion), 1, archivoTransaccion);
 
@@ -292,9 +293,9 @@ void mostrarPasajeroConcho(FILE * archivoTransaccion, FILE * archivoPasajeros, c
             while (ftell(archivoPasajeros) < tamanoPasajeros) {
                 fread(&pasajeroActual, sizeof(Pasajeros), 1, archivoPasajeros);
                 if (strcmp(pasajeroActual.ID, transaccionActual.idPasajero) == 0) {
-                    printf("Nombre: %s\n", pasajeroActual.nombre);
-                    printf("Teléfono: %s\n", pasajeroActual.telefono);
-                    printf("\n");
+                    printf("Nombre: %s\t \t", pasajeroActual.nombre);
+                    printf("Telefono: %s\n", pasajeroActual.telefono);
+
                 }
             }
         }
@@ -302,6 +303,23 @@ void mostrarPasajeroConcho(FILE * archivoTransaccion, FILE * archivoPasajeros, c
     if (!encontrado) {
         printf("El carro no ha sido encontrado en los archivos\n");
     }
+
+    printf("Si quieres filtrar segun otra opciones, ingrese (1)");
+    scanf("%d",&mas);
+
+    if(mas ==1){
+        printf("(1)Filtrar segun lugar de trabajo");
+        printf("(2)Filtrar segun servicio de celular");
+        printf("(3)Segun tiempo de viaje");
+        printf("(4)Segun el monto con el que pago el pasajero");
+        printf("(5)Segun monto de servicio");
+
+        switch (mas == 1) {
+            case 1:
+        }
+    }
+
+
 }
 
 
